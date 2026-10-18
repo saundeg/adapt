@@ -161,6 +161,8 @@ footer{margin-top:3rem;font-size:.85rem;color:var(--muted)}
   <p class="domain-desc" style="margin-bottom:1rem">Pick one or two actions. Your suggested focus is open to start with.</p>
   <div id="actions"></div>
 
+  <p class="note" style="margin-top:2rem">Want to go further than these actions? The ADAPT learning packages explore the points in this report in more depth, with a short course for each of the five domains, alongside sections on the AI tools available to you and on AI and the environment.</p>
+
   <div class="prompts">
     <h2>Questions to take to your next one-to-one</h2>
     <ul>
@@ -338,7 +340,7 @@ function renderResults(){
   $("strongName").textContent = DOMAINS[strong].name;
   $("strongLevel").textContent = levelName(S[strong].li) + ". Consider how you could share what you do well here.";
   $("focusName").textContent = DOMAINS[focus].name;
-  $("focusLevel").textContent = levelName(S[focus].li) + ". Suggested learning: " + DOMAINS[focus].pkg + ".";
+  $("focusLevel").textContent = levelName(S[focus].li) + ". This is the area worth putting your development time into next.";
 
   $("actions").innerHTML = DOMAINS.map((d,i)=>{
     const s = S[i];
@@ -347,9 +349,6 @@ function renderResults(){
       <summary>${d.name}</summary>
       <p class="pkg" style="margin:.6rem 0 0">${heading}</p>
       <ul>${d.next[s.li+1].map(x=>`<li>${x}</li>`).join("")}</ul>
-      <p class="pkg">Learning package: ${d.pkg}</p>
-      ${d.extra?`<p class="pkg">${d.extra}</p>`:""}
-      ${(d.extraLow && s.li<1)?`<p class="pkg">${d.extraLow}</p>`:""}
     </details>`;
   }).join("");
 
@@ -358,7 +357,7 @@ function renderResults(){
   DOMAINS.forEach((d,i)=>{ txt += `${d.name}: ${levelName(S[i].li)}\n`; });
   txt += `\nStrongest domain: ${DOMAINS[strong].name}\nDevelopment focus: ${DOMAINS[focus].name}\n\nActions for my focus domain:\n`;
   DOMAINS[focus].next[S[focus].li+1].forEach(x=>{ txt += `- ${x}\n`; });
-  txt += `\nSuggested learning: ${DOMAINS[focus].pkg}\n`;
+  txt += `\nTo go further, the ADAPT learning packages cover these areas in more depth.\n`;
   $("summaryText").value = txt;
   $("copyMsg").textContent = "";
 
