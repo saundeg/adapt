@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ADAPT self-assessment: AI capability for professional services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Literata:opsz,wght@7..72,500;7..72,650&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F4F6F7; --surface:#FFFFFF; --ink:#1B2831; --muted:#56656F; --line:#D3DBE0;
+  --aware:#9DBDD6; --practising:#3E7FA3; --leading:#16425B; --focus:#D9A21B;
+  --track:#E4EAEE; --select-bg:#16425B; --select-ink:#FFFFFF;
+  --serif:"Literata",Georgia,"Times New Roman",serif;
+  --sans:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#131B21; --surface:#1B252D; --ink:#E6ECEF; --muted:#9AAAB4; --line:#33424D;
+    --aware:#5C85A3; --practising:#6FA9CB; --leading:#B7D6EA; --focus:#E8B84A;
+    --track:#26333C; --select-bg:#B7D6EA; --select-ink:#131B21;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#131B21; --surface:#1B252D; --ink:#E6ECEF; --muted:#9AAAB4; --line:#33424D;
+  --aware:#5C85A3; --practising:#6FA9CB; --leading:#B7D6EA; --focus:#E8B84A;
+  --track:#26333C; --select-bg:#B7D6EA; --select-ink:#131B21;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:1.0625rem;line-height:1.55}
+main{max-width:44rem;margin:0 auto;padding:2.5rem 1.25rem 4rem}
+h1,h2,h3{font-family:var(--serif);font-weight:650;line-height:1.2;margin:0}
+h1{font-size:clamp(2rem,6vw,2.9rem);letter-spacing:-0.01em}
+h2{font-size:1.6rem}
+h3{font-size:1.2rem;font-weight:500}
+p{margin:0 0 1rem}
+.lede{font-size:1.2rem;color:var(--muted);margin-top:1rem;max-width:36rem}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.btn{background:var(--select-bg);color:var(--select-ink);border:0;border-radius:6px;padding:.8rem 1.4rem;font-weight:700}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center}
+.hidden{display:none!important}
+
+/* Intro */
+.levels{margin:2rem 0;border-top:1px solid var(--line)}
+.levels div{display:grid;grid-template-columns:7.5rem 1fr;gap:1rem;padding:.9rem 0;border-bottom:1px solid var(--line)}
+.levels b{font-family:var(--serif);font-weight:500}
+.swatch{display:inline-block;width:.8rem;height:.8rem;border-radius:2px;margin-right:.45rem;vertical-align:baseline}
+.note{font-size:.95rem;color:var(--muted);border-left:3px solid var(--line);padding-left:1rem;margin:1.5rem 0}
+
+/* Progress */
+.progress{display:flex;gap:4px;margin-bottom:2rem}
+.progress span{flex:1;height:6px;border-radius:3px;background:var(--track)}
+.progress span.done{background:var(--practising)}
+.progress span.now{background:var(--leading)}
+.stepmeta{color:var(--muted);font-size:.95rem;margin-bottom:.4rem}
+.domain-desc{color:var(--muted);margin:.75rem 0 2rem}
+
+/* Questions */
+fieldset{border:0;margin:0 0 1.75rem;padding:0}
+legend{padding:0;margin-bottom:.7rem;font-size:1.05rem}
+.scale{display:grid;grid-template-columns:repeat(4,1fr);border:1.5px solid var(--line);border-radius:6px;overflow:hidden}
+.scale label{position:relative;text-align:center;padding:.6rem .25rem;font-size:.92rem;border-left:1.5px solid var(--line);background:var(--surface);cursor:pointer;line-height:1.25}
+.scale label:first-child{border-left:0}
+.scale input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.scale label:has(input:checked){background:var(--select-bg);color:var(--select-ink);font-weight:700}
+.scale label:has(input:focus-visible){outline:3px solid var(--focus);outline-offset:-3px}
+.missing{color:#B3261E;font-size:.95rem;margin-top:-.5rem}
+:root[data-theme="dark"] .missing{color:#F2B8B5}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .missing{color:#F2B8B5}}
+
+/* Results ladder */
+.ladder{margin:2rem 0 2.5rem}
+.rung{padding:1.1rem 0;border-bottom:1px solid var(--line)}
+.rung:first-child{border-top:1px solid var(--line)}
+.rung-head{display:flex;justify-content:space-between;gap:1rem;align-items:baseline;margin-bottom:.6rem}
+.rung-head h3{font-size:1.1rem}
+.placement{font-weight:700;white-space:nowrap;font-size:.95rem}
+.track{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.seg{height:14px;background:var(--track);border-radius:2px;overflow:hidden}
+.seg i{display:block;height:100%;width:0;transition:width .7s ease}
+.seg:nth-child(1) i{background:var(--aware)}
+.seg:nth-child(2) i{background:var(--practising)}
+.seg:nth-child(3) i{background:var(--leading)}
+.seg-labels{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;font-size:.8rem;color:var(--muted);margin-top:.3rem}
+@media (prefers-reduced-motion:reduce){.seg i{transition:none}}
+
+.highlights{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2.5rem}
+.highlights section{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:1rem 1.1rem}
+.highlights p{margin:.3rem 0 0}
+.highlights .k{color:var(--muted);font-size:.9rem;margin:0}
+@media (max-width:560px){.highlights{grid-template-columns:1fr}.levels div{grid-template-columns:1fr;gap:.2rem}}
+
+details{border-top:1px solid var(--line);padding:.9rem 0}
+details:last-of-type{border-bottom:1px solid var(--line)}
+summary{cursor:pointer;font-family:var(--serif);font-size:1.1rem;font-weight:500}
+details ul{margin:.8rem 0 .5rem;padding-left:1.2rem}
+details li{margin-bottom:.4rem}
+.pkg{font-size:.95rem;color:var(--muted)}
+.prompts{margin:2.5rem 0}
+.prompts li{margin-bottom:.6rem}
+textarea{width:100%;min-height:12rem;font-family:var(--sans);font-size:.9rem;padding:.8rem;border:1.5px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink);resize:vertical}
+footer{margin-top:3rem;font-size:.85rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<main>
+
+<!-- INTRO -->
+<section id="intro">
+  <h1>Where are you with AI at work?</h1>
+  <p class="lede">A ten-minute self-assessment for professional services colleagues, based on the five domains of the ADAPT framework.</p>
+
+  <p>You'll read 30 short statements, six for each domain, and say how much each one sounds like you. At the end you'll see where you sit in each domain, your strongest area, a suggested focus for development, and practical next steps.</p>
+
+  <div class="levels" aria-label="The three ADAPT levels">
+    <div><b><span class="swatch" style="background:var(--aware)"></span>Aware</b><span>You understand the basics and have started to experiment.</span></div>
+    <div><b><span class="swatch" style="background:var(--practising)"></span>Practising</b><span>You use AI purposefully and thoughtfully in your everyday work.</span></div>
+    <div><b><span class="swatch" style="background:var(--leading)"></span>Leading</b><span>You shape how your team and service use AI, and support others.</span></div>
+  </div>
+
+  <p class="note">This is a tool for reflection and development conversations, not a performance measure. Answer honestly: there are no right answers. Your responses stay in this browser and are not sent anywhere.</p>
+
+  <div class="row">
+    <button class="btn" id="startBtn">Start the assessment</button>
+    <button class="btn ghost hidden" id="resumeBtn">Resume where I left off</button>
+  </div>
+</section>
+
+<!-- QUESTIONS -->
+<section id="quiz" class="hidden" aria-live="polite">
+  <div class="progress" id="progress" aria-hidden="true"></div>
+  <p class="stepmeta" id="stepMeta"></p>
+  <h2 id="domainTitle" tabindex="-1"></h2>
+  <p class="domain-desc" id="domainDesc"></p>
+  <form id="qForm" onsubmit="return false"></form>
+  <p class="missing hidden" id="missing">Answer every statement to continue.</p>
+  <div class="row">
+    <button class="btn ghost" id="backBtn">Back</button>
+    <button class="btn" id="nextBtn">Next domain</button>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section id="results" class="hidden">
+  <h2 id="resultsTitle" tabindex="-1">Your ADAPT profile</h2>
+  <p class="domain-desc">Filled segments show levels you've reached. A part-filled segment shows how close you are to the next one.</p>
+
+  <div class="ladder" id="ladder"></div>
+
+  <div class="highlights">
+    <section><p class="k">Your strongest domain</p><h3 id="strongName"></h3><p id="strongLevel"></p></section>
+    <section><p class="k">Suggested development focus</p><h3 id="focusName"></h3><p id="focusLevel"></p></section>
+  </div>
+
+  <h2>Next steps by domain</h2>
+  <p class="domain-desc" style="margin-bottom:1rem">Pick one or two actions. Your suggested focus is open to start with.</p>
+  <div id="actions"></div>
+
+  <div class="prompts">
+    <h2>Questions to take to your next one-to-one</h2>
+    <ul>
+      <li>Which parts of my current role could be meaningfully supported by AI?</li>
+      <li>Where does my distinct human contribution add the most value?</li>
+      <li>What one change over the next three months would move me towards the next level in my focus domain?</li>
+      <li>What support, time or training would help me get there?</li>
+    </ul>
+  </div>
+
+  <h2>Keep a copy</h2>
+  <p class="domain-desc" style="margin-bottom:1rem">Copy this summary into your notes or send it to your manager ahead of a development conversation.</p>
+  <textarea id="summaryText" readonly aria-label="Your results summary"></textarea>
+  <div class="row" style="margin-top:.8rem">
+    <button class="btn" id="copyBtn">Copy summary</button>
+    <button class="btn ghost" id="restartBtn">Start again</button>
+    <span id="copyMsg" class="pkg" role="status"></span>
+  </div>
+
+  <footer>Based on the ADAPT framework, a companion to FUTURES (Specht &amp; Saunders, 2026, HEPI Report 198), adapted for professional services colleagues at the University of Westminster.</footer>
+</section>
+
+</main>
+
+<script>
+const LEVELS = ["Aware","Practising","Leading"];
+const SCALE = ["Not yet","A little","Mostly","Very much"];
+
+const DOMAINS = [
+ { name:"AI and Digital Confidence",
+   desc:"Working confidently with AI tools, digital workflows and data: experimenting, judging outputs critically, and building AI into everyday work.",
+   pkg:"Working confidently with AI",
+   extraLow:"New to this? Start with the AI tools section, which covers what's available to you.",
+   q:[
+    ["I have tried at least one AI tool, such as Copilot or ChatGPT, for a basic task like drafting or summarising.",0],
+    ["I check AI-generated content for accuracy before I use it.",0],
+    ["I use AI tools purposefully and regularly in my everyday work.",1],
+    ["I have combined AI with other tools to create a simple workflow, for example Forms with Power Automate.",1],
+    ["I have designed or redesigned a workflow for my team that combines human and AI steps.",2],
+    ["I can judge when AI is the right tool and when simpler automation would work better, and I share guidance on this.",2]],
+   next:[
+    ["Use an approved AI tool to summarise a non-sensitive document, then compare the summary with the original.","Note one thing it got right and one thing it got wrong."],
+    ["Choose one recurring task and use AI for it each week for a month, reviewing every output before acting on it.","Show one colleague how you did it."],
+    ["Map one team process step by step and mark where AI, simple automation or a person adds most value.","Write a short how-to guide for your team."],
+    ["Run a short show-and-tell on a workflow you have redesigned.","Review your team's workflows every six months as tools change."]]},
+ { name:"Ethical and Responsible Practice",
+   desc:"Using AI responsibly, with attention to data privacy, bias, fairness, transparency and sustainability.",
+   pkg:"Using AI responsibly",
+   extra:"See also the AI and the environment section.",
+   q:[
+    ["I understand the basic data protection rules that apply to my work.",0],
+    ["I know my institution's policy on using AI tools, and I follow it.",0],
+    ["Before using an AI tool, I consider whether the information is sensitive and whether a simpler, lighter option would do the job.",1],
+    ["I can spot where an AI-assisted process might produce biased or unfair outcomes.",1],
+    ["I have created or contributed to guidance for my team on responsible AI use, covering which data can be used with which tools and how outputs are checked.",2],
+    ["When choosing tools or designing processes, I weigh the environmental cost of AI against what it actually delivers.",2]],
+   next:[
+    ["Read your institution's AI policy and note which tools are approved for your work.","Check which kinds of data you handle count as personal or sensitive.","Pick two habits from the Lighter AI guide and make them automatic this week."],
+    ["Before your next AI task, ask whether the data is sensitive and whether a simpler option would do the job.","Review one AI-assisted output for signs of bias or unfair assumptions.","Default to short answers, and edit drafts rather than regenerating them."],
+    ["Draft a one-page guide for your team on which data can be used with which tools.","Add an accuracy and fairness check to one AI-assisted process.","Ask what a tool costs environmentally before adopting it, not after."],
+    ["Contribute to institutional policy discussions on AI.","Raise supplier transparency on energy and water use when contracts are renewed."]]},
+ { name:"Adaptability and Critical Judgement",
+   desc:"Responding constructively to change, evaluating new tools with good judgement, and continuing to learn as technology evolves.",
+   pkg:"Learning and leading through change",
+   q:[
+    ["I am open to learning new tools and ways of working.",0],
+    ["I recognise that AI is changing how work gets done in my area.",0],
+    ["I actively look for opportunities to learn about and experiment with new tools.",1],
+    ["I can judge whether a new tool would genuinely improve a process without harming service quality or human contact.",1],
+    ["I anticipate how emerging technologies might affect my service area, and plan for it.",2],
+    ["I lead or contribute to change initiatives and support colleagues through transitions.",2]],
+   next:[
+    ["Attend one AI workshop or short course, and try one new tool afterwards.","Talk with a colleague about how AI is changing work in your area."],
+    ["Set aside 30 minutes a fortnight to experiment with a new tool or feature.","Use a simple checklist to judge whether a tool would really improve a process."],
+    ["List two emerging capabilities that could affect your service in the next year.","Propose a small, time-limited pilot to test one of them."],
+    ["Mentor a colleague through a change in their work.","Share what didn't work as openly as what did."]]},
+ { name:"Professional Identity in Transition",
+   desc:"Navigating changes to your role and professional identity as AI takes on tasks that were once central to your expertise.",
+   pkg:"Your professional value alongside AI",
+   q:[
+    ["I can describe what I do that adds distinct human value.",0],
+    ["I am open to conversations about how my role might change.",0],
+    ["I am shifting my time from routine tasks towards work that needs judgement, relationships or contextual knowledge.",1],
+    ["I am developing skills that complement AI rather than compete with it.",1],
+    ["I have a clear view of my professional value in an AI-enabled workplace, and I help colleagues think about theirs.",2],
+    ["I take part in institutional conversations about workforce development and changing roles.",2]],
+   next:[
+    ["Write down three things you do that rely on judgement, relationships or local knowledge.","Raise how your role might evolve at your next one-to-one."],
+    ["Review a typical week and identify routine tasks AI could support.","Choose one complementary skill to build, such as complex casework or process design."],
+    ["Write a short statement of your professional value in an AI-enabled service.","Help a colleague think through how their role might change."],
+    ["Contribute to workforce development or role redesign discussions.","Share your own experience of role change with your team."]]},
+ { name:"Collaboration and Communication",
+   desc:"Working well with colleagues, students and partners as AI changes how teams operate, how information flows and how decisions are made.",
+   pkg:"Collaborating and communicating in AI-enabled teams",
+   q:[
+    ["I can explain to colleagues which AI tools I use and how.",0],
+    ["I communicate clearly and work cooperatively in my team.",0],
+    ["I am open with students, colleagues and partners when AI has supported a decision or piece of work.",1],
+    ["I can help manage tensions in my team when AI changes how people work.",1],
+    ["I help create an environment where colleagues feel safe to experiment with AI and to say what isn't working.",2],
+    ["I share AI practice beyond my team, across the institution or in professional communities.",2]],
+   next:[
+    ["Tell a colleague which AI tools you have tried and what you used them for.","Ask your team which tools they are using."],
+    ["Agree a simple form of words for telling people when AI supported your work.","Start a team conversation about how AI is changing who does what."],
+    ["Set up a regular slot where the team shares what is and isn't working with AI.","Make it clear that trying things and reporting setbacks is welcome."],
+    ["Share your team's practice at a cross-institution or sector event.","Help explain institutional AI strategy to different audiences."]]}
+];
+
+const KEY = "adapt-diagnostic-v1";
+let answers = DOMAINS.map(d => d.q.map(() => null));
+let step = 0;
+
+const $ = id => document.getElementById(id);
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify({answers, step})); }catch(e){} }
+function load(){ try{ const s = JSON.parse(localStorage.getItem(KEY)); if(s && Array.isArray(s.answers) && s.answers.length===5) return s; }catch(e){} return null; }
+function clearSaved(){ try{ localStorage.removeItem(KEY); }catch(e){} }
+
+function show(id){ ["intro","quiz","results"].forEach(s => $(s).classList.toggle("hidden", s!==id)); window.scrollTo(0,0); }
+
+function renderStep(){
+  const d = DOMAINS[step];
+  $("progress").innerHTML = DOMAINS.map((_,i)=>`<span class="${i<step?'done':i===step?'now':''}"></span>`).join("");
+  $("stepMeta").textContent = `Domain ${step+1} of 5`;
+  $("domainTitle").textContent = d.name;
+  $("domainDesc").textContent = d.desc;
+  $("qForm").innerHTML = d.q.map((q,qi)=>`
+    <fieldset>
+      <legend>${q[0]}</legend>
+      <div class="scale">
+        ${SCALE.map((s,v)=>`<label><input type="radio" name="q${qi}" value="${v}" ${answers[step][qi]===v?'checked':''}>${s}</label>`).join("")}
+      </div>
+    </fieldset>`).join("");
+  $("backBtn").textContent = step===0 ? "Back to introduction" : "Previous domain";
+  $("nextBtn").textContent = step===4 ? "See my results" : "Next domain";
+  $("missing").classList.add("hidden");
+  $("domainTitle").focus({preventScroll:true});
+}
+
+$("qForm").addEventListener("change", e => {
+  if(e.target.name){ answers[step][+e.target.name.slice(1)] = +e.target.value; save(); }
+});
+
+function score(di){
+  const a = answers[di], q = DOMAINS[di].q;
+  const avg = [0,1,2].map(l => { const v = q.map((x,i)=>x[1]===l?a[i]:null).filter(x=>x!==null); return v.reduce((s,x)=>s+x,0)/v.length; });
+  let li = -1;
+  for(let l=0;l<3;l++){ if(avg[l]>=2) li=l; else break; }
+  const total = a.reduce((s,x)=>s+x,0);
+  return {avg, li, total};
+}
+const levelName = li => li<0 ? "Building towards Aware" : LEVELS[li];
+
+function renderResults(){
+  const S = DOMAINS.map((_,i)=>score(i));
+  $("ladder").innerHTML = DOMAINS.map((d,i)=>{
+    const s = S[i];
+    const fills = [0,1,2].map(l => l<=s.li ? 100 : (l===s.li+1 ? Math.min(90, Math.round(s.avg[l]/2*90)) : 0));
+    return `<div class="rung">
+      <div class="rung-head"><h3>${d.name}</h3><span class="placement">${levelName(s.li)}</span></div>
+      <div class="track" role="img" aria-label="${d.name}: ${levelName(s.li)}">
+        ${fills.map(f=>`<div class="seg"><i data-w="${f}"></i></div>`).join("")}
+      </div>
+      <div class="seg-labels" aria-hidden="true"><span>Aware</span><span>Practising</span><span>Leading</span></div>
+    </div>`;
+  }).join("");
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    document.querySelectorAll(".seg i").forEach(el=>el.style.width = el.dataset.w+"%");
+  }));
+
+  const idx = [0,1,2,3,4];
+  const strong = [...idx].sort((a,b)=> S[b].li-S[a].li || S[b].total-S[a].total)[0];
+  let focus = [...idx].sort((a,b)=> S[a].li-S[b].li || S[a].total-S[b].total)[0];
+  if(focus===strong) focus = [...idx].filter(i=>i!==strong).sort((a,b)=> S[a].li-S[b].li || S[a].total-S[b].total)[0];
+
+  $("strongName").textContent = DOMAINS[strong].name;
+  $("strongLevel").textContent = levelName(S[strong].li) + ". Consider how you could share what you do well here.";
+  $("focusName").textContent = DOMAINS[focus].name;
+  $("focusLevel").textContent = levelName(S[focus].li) + ". Suggested learning: " + DOMAINS[focus].pkg + ".";
+
+  $("actions").innerHTML = DOMAINS.map((d,i)=>{
+    const s = S[i];
+    const heading = s.li===2 ? "Sustaining Leading" : `Moving towards ${LEVELS[s.li+1]}`;
+    return `<details ${i===focus?'open':''}>
+      <summary>${d.name}</summary>
+      <p class="pkg" style="margin:.6rem 0 0">${heading}</p>
+      <ul>${d.next[s.li+1].map(x=>`<li>${x}</li>`).join("")}</ul>
+      <p class="pkg">Learning package: ${d.pkg}</p>
+      ${d.extra?`<p class="pkg">${d.extra}</p>`:""}
+      ${(d.extraLow && s.li<1)?`<p class="pkg">${d.extraLow}</p>`:""}
+    </details>`;
+  }).join("");
+
+  const date = new Date().toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+  let txt = `ADAPT self-assessment, ${date}\n\n`;
+  DOMAINS.forEach((d,i)=>{ txt += `${d.name}: ${levelName(S[i].li)}\n`; });
+  txt += `\nStrongest domain: ${DOMAINS[strong].name}\nDevelopment focus: ${DOMAINS[focus].name}\n\nActions for my focus domain:\n`;
+  DOMAINS[focus].next[S[focus].li+1].forEach(x=>{ txt += `- ${x}\n`; });
+  txt += `\nSuggested learning: ${DOMAINS[focus].pkg}\n`;
+  $("summaryText").value = txt;
+  $("copyMsg").textContent = "";
+
+  show("results");
+  $("resultsTitle").focus({preventScroll:true});
+}
+
+$("startBtn").onclick = () => { answers = DOMAINS.map(d=>d.q.map(()=>null)); step=0; clearSaved(); show("quiz"); renderStep(); };
+$("resumeBtn").onclick = () => {
+  const s = load(); if(!s) return;
+  answers = s.answers; step = Math.min(4, Math.max(0, s.step||0));
+  show("quiz"); renderStep();
+};
+$("backBtn").onclick = () => { if(step===0){ show("intro"); refreshResume(); } else { step--; save(); renderStep(); } };
+$("nextBtn").onclick = () => {
+  if(answers[step].some(x=>x===null)){ $("missing").classList.remove("hidden"); return; }
+  if(step<4){ step++; save(); renderStep(); window.scrollTo(0,0); }
+  else { save(); renderResults(); }
+};
+$("restartBtn").onclick = () => { clearSaved(); answers = DOMAINS.map(d=>d.q.map(()=>null)); step=0; show("intro"); refreshResume(); };
+$("copyBtn").onclick = async () => {
+  const ta = $("summaryText");
+  try{ await navigator.clipboard.writeText(ta.value); $("copyMsg").textContent = "Summary copied."; }
+  catch(e){
+    ta.focus(); ta.select();
+    try{ document.execCommand("copy"); $("copyMsg").textContent = "Summary copied."; }
+    catch(e2){ $("copyMsg").textContent = "Text selected. Press Ctrl+C or Cmd+C to copy."; }
+  }
+};
+
+function refreshResume(){
+  const s = load();
+  const started = s && s.answers.some(d=>d.some(x=>x!==null));
+  $("resumeBtn").classList.toggle("hidden", !started);
+}
+refreshResume();
+</script>
+</body>
+</html>
